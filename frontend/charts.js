@@ -5,7 +5,6 @@ let chartInstance = null;
 
 /* -------------------- Data Fetching -------------------- */
 
-
 /**
  * Fetches all catches from the backend API.
  *
@@ -13,8 +12,16 @@ let chartInstance = null;
  */
 async function fetchCatches() {
   try {
-    const res = await fetch(`${backendUrl}/catches`);
+    const userId = localStorage.getItem("user_id");
+
+    if (!userId) {
+      console.error("No user_id found in localStorage");
+      return [];
+    }
+
+    const res = await fetch(`${backendUrl}/catches?user_id=${userId}`);
     const json = await res.json();
+
     return json.data || [];
   } catch (err) {
     console.error("Error fetching catches:", err);
