@@ -584,7 +584,13 @@ input:focus{
   content: "";
 }
 
-
+input[type="date"],
+input[type="time"] {
+  height: 2.5rem;       /* match other input fields */
+  padding: 0 0.5rem;    /* adjust horizontal padding if needed */
+  font-size: 1rem;      /* match text inputs */
+  box-sizing: border-box; 
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
