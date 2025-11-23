@@ -9,54 +9,34 @@ const itemsPerPage = 25;
 /* -------------------- Home Page: Catches -------------------- */
 const catchForm = document.getElementById("catchForm");
 
-flatpickr("#datePicker", {
-    dateFormat: "m/d/Y"
-  });
+let datePicker, timePicker, editDatePicker, editTimePicker;
 
-  flatpickr("#timePicker", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "h:i K"
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize Flatpickr once for log form
+  datePicker = flatpickr("#datePicker", { dateFormat: "m/d/Y" });
+  timePicker = flatpickr("#timePicker", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
+
+  // Initialize Flatpickr once for edit modal
+  editDatePicker = flatpickr("#editDate", { dateFormat: "m/d/Y" });
+  editTimePicker = flatpickr("#editTime", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
+});
 
 if (catchForm) {
-  /**
-   * Event listener for submitting a new catch.
-   * Converts form data into an object, applies default date/time if missing,
-   * sends it to the backend, and reloads the table.
-   */
   catchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const formData = new FormData(catchForm);
     const catchData = Object.fromEntries(formData.entries());
 
+    // Convert visible Flatpickr inputs to backend format
     const visibleDate = (document.getElementById("datePicker")?.value || "").trim();
     const visibleTime = (document.getElementById("timePicker")?.value || "").trim();
 
-    if (visibleDate) {
-      const iso = convertDateToISO(visibleDate);
-      if (iso) {
-        catchData.date = iso;
-      } else {
-        catchData.date = "";
-      }
-    }
+    if (visibleDate) catchData.date = convertDateToISO(visibleDate);
+    if (visibleTime) catchData.time = convertTimeTo24(visibleTime);
 
-    if (visibleTime) {
-      const t24 = convertTimeTo24(visibleTime);
-      if (t24) {
-        catchData.time = t24;
-      } else {
-        catchData.time = "";
-      }
-    }
-
-    // Set default date/time if missing
+    // Set defaults if empty
     if (!catchData.date) catchData.date = new Date().toISOString().slice(0, 10);
-    if (!catchData.time)
-      catchData.time = new Date().toLocaleTimeString("en-GB", { hour12: false });
-
+    if (!catchData.time) catchData.time = new Date().toLocaleTimeString("en-GB", { hour12: false });
 
     try {
       const res = await fetch(`${backendUrl}/log-catch`, {
@@ -65,9 +45,7 @@ if (catchForm) {
         body: JSON.stringify(catchData),
       });
 
-
       const result = await res.json();
-
 
       if (result.success) {
         catchForm.reset();
@@ -79,7 +57,6 @@ if (catchForm) {
       alert("❌ Network or server error: " + err.message);
     }
   });
-
 
   loadCatches();
 }
@@ -345,71 +322,35 @@ async function deleteCatch(id) {
 
 function openEditForm(catchItem) {
   const modal = document.getElementById("editModal");
-  modal.setAttribute("aria-hidden", "false");
   modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
 
-
-  let cleanTime = catchItem.time || "";
-  if (cleanTime.includes(":")) cleanTime = cleanTime.split(":").slice(0, 2).join(":");
-
-  flatpickr("#editDate", {
-    dateFormat: "m/d/Y"
-  });
-
-  flatpickr("#editTime", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "h:i K"
-  });
+  // Set date/time in Flatpickr
+  editDatePicker.setDate(catchItem.date || new Date(), true, "Y-m-d");
+  editTimePicker.setDate(catchItem.time || new Date(), true, "H:i");
 
   document.getElementById("editId").value = catchItem.id;
-  document.getElementById("editDate").value = catchItem.date || "";
-  document.getElementById("editTime").value = cleanTime;
   document.getElementById("editLocation").value = catchItem.location || "";
   document.getElementById("editSpecies").value = catchItem.species || "";
-  document.getElementById("editLength").value =
-  catchItem.length_in != null ? catchItem.length_in : "";
-  document.getElementById("editWeight").value =
-  catchItem.weight_lbs != null ? catchItem.weight_lbs : "";
-  document.getElementById("editTemperature").value =
-  catchItem.temperature != null ? catchItem.temperature : "";
+  document.getElementById("editLength").value = catchItem.length_in ?? "";
+  document.getElementById("editWeight").value = catchItem.weight_lbs ?? "";
+  document.getElementById("editTemperature").value = catchItem.temperature ?? "";
   document.getElementById("editBait").value = catchItem.bait || "";
 }
 
-
-/*
- * Closes the edit modal.
- */
-function closeEditForm() {
-  const modal = document.getElementById("editModal");
-  modal.setAttribute("aria-hidden", "true");
-  modal.style.display = "none";
-}
-
-
 const editForm = document.getElementById("editForm");
-
-
 if (editForm) {
   editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("editId").value;
 
-  // Read visible input values
-  const visibleDate = (document.getElementById("editDate")?.value || "").trim();
-  const visibleTime = (document.getElementById("editTime")?.value || "").trim();
-
-  // Convert date and time to backend formats
-  let dateForBackend = visibleDate ? convertDate_US_ToISO(visibleDate) : "";
-  let timeForBackend = visibleTime ? convertTimeTo24(visibleTime) : "";
-
-  // Default to now if empty
-  if (!dateForBackend) dateForBackend = new Date().toISOString().slice(0, 10);
-  if (!timeForBackend) timeForBackend = new Date().toLocaleTimeString("en-GB", { hour12: false });
+    // Get Flatpickr inputs in backend-friendly format
+    let dateForBackend = editDatePicker.input.value ? convertDateToISO(editDatePicker.input.value) : new Date().toISOString().slice(0, 10);
+    let timeForBackend = editTimePicker.input.value ? convertTimeTo24(editTimePicker.input.value) : new Date().toLocaleTimeString("en-GB", { hour12: false });
 
     const payload = {
-      date: document.getElementById("editDate").value,
-      time: document.getElementById("editTime").value,
+      date: dateForBackend,
+      time: timeForBackend,
       location: document.getElementById("editLocation").value,
       species: document.getElementById("editSpecies").value,
       length_in: (() => { const v = parseFloat(document.getElementById("editLength").value); return Number.isFinite(v) ? v : document.getElementById("editLength").value; })(),
@@ -418,7 +359,6 @@ if (editForm) {
       bait: document.getElementById("editBait").value,
     };
 
-    // Log payload we are about to send
     console.log("PUT payload:", payload);
 
     try {
@@ -428,7 +368,6 @@ if (editForm) {
         body: JSON.stringify(payload),
       });
 
-      // Always capture raw response text so we see validation details even if not valid JSON
       const raw = await res.text();
       console.log("PUT response status:", res.status);
       console.log("RESPONSE TEXT:", raw);
@@ -436,12 +375,9 @@ if (editForm) {
       if (!res.ok) {
         alert(`Update failed: ${res.status} — check console for details.`);
       } else {
-        // success path
         closeEditForm();
-        if (typeof loadCatches === "function") { 
-          await loadCatches(true);  // reload allCatches from backend
-          renderTablePage(currentPage); // stay on the current page
-        }
+        await loadCatches(true);
+        renderTablePage(currentPage);
       }
     } catch (err) {
       console.error("Network error while updating catch:", err);
@@ -450,12 +386,11 @@ if (editForm) {
   });
 }
 
-
-
-// Close modal on Escape key
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeEditForm();
-});
+function closeEditForm() {
+  const modal = document.getElementById("editModal");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+}
 
 
 /* -------------------- Date & Time Formatting -------------------- */
