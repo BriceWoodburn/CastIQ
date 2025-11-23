@@ -6,8 +6,6 @@
   <title>CastIQ - Fishing Tracker</title>
   <link rel="stylesheet" href="/static/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
   <!-- Page Wrapper -->
@@ -30,8 +28,8 @@
       <section class="log-section" aria-labelledby="logCatchTitle">
         <h2 id="logCatchTitle">Log a New Catch</h2>
         <form id="catchForm" class="catch-form" autocomplete="off" aria-label="Log new catch form">
-          <input id="datePicker" type="text" placeholder="Select Date" aria-label="Date of catch" />
-          <input id="timePicker" type="text" placeholder="Select Time" aria-label="Time of catch" />
+          <input type="date" id="date" name="date" class="styled-input"  data-placeholder="Date" aria-label="Date of catch"/>
+          <input type="time" id="time" name="time" class="styled-input" data-placeholder="Time" aria-label="Time of catch"/>
           <input type="text" name="location" placeholder="Location" required aria-label="Location" />
           <input type="text" name="species" placeholder="Species" required aria-label="Species" />
           <input type="number" step="0.01" name="length_in" placeholder="Length (inches)" required aria-label="Length in inches" />
