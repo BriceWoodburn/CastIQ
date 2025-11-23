@@ -6,6 +6,18 @@ let currentPage = 1;
 const itemsPerPage = 25;
 
 
+// Create or load a unique user ID
+function getUserId() {
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = crypto.randomUUID(); // built-in universally unique ID
+    localStorage.setItem("userId", userId);
+  }
+  return userId;
+}
+
+const USER_ID = getUserId();
+
 /* -------------------- Home Page: Catches -------------------- */
 const catchForm = document.getElementById("catchForm");
 
@@ -32,7 +44,7 @@ if (catchForm) {
       const res = await fetch(`${backendUrl}/log-catch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(catchData),
+        body: JSON.stringify({catchData, user_id: USER_ID,}),
       });
 
 
@@ -81,7 +93,7 @@ timeInput.value = `${hours}:${minutes}`;
  */
 async function loadCatches(keepPage = false) {
   try {
-    const res = await fetch(`${backendUrl}/catches`);
+    const res = await fetch(`${backendUrl}/catches?user_id=${USER_ID}`);
     const json = await res.json();
     allCatches = json.data || [];
 
@@ -279,7 +291,7 @@ function escapeHtml(text = "") {
  */
 async function deleteCatch(id) {
   try {
-    const res = await fetch(`${backendUrl}/delete-catch/${id}`, { method: "DELETE" });
+    const res = await fetch(`${backendUrl}/delete-catch/${id}?user_id=${USER_ID}`, {method: "DELETE",});
     const result = await res.json();
 
 
@@ -360,7 +372,7 @@ if (editForm) {
       const res = await fetch(`${backendUrl}/edit-catch/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({payload, user_id: USER_ID,}),
       });
 
       // Always capture raw response text so we see validation details even if not valid JSON

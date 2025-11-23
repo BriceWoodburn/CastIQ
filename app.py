@@ -35,6 +35,7 @@ app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 # ---------------- Pydantic Model ----------------
 class Catch(BaseModel):
+    user_id: str
     date: str
     time: str
     location: str
@@ -64,21 +65,19 @@ def get_charts():
 @app.post("/log-catch")
 def logCatch(catch: Catch):
     """
-    Logs a new catch to the Supabase database.
-    If date or time is missing, defaults to current date and time.
+    Logs a new catch tied to a specific user_id.
     """
     try:
-        # Set defaults if missing
+        if not catch.user_id:
+            raise HTTPException(status_code=400, detail="Missing user_id")
+
         if not catch.date:
             catch.date = datetime.today().date().isoformat()
         if not catch.time:
             catch.time = datetime.now().strftime("%H:%M")
 
-
-        # Insert catch into Supabase
-        response = supabase.table("catches").insert([catch.dict()]).execute()
+        response = supabase.table("catches").insert(catch.dict()).execute()
         return {"success": True, "data": response.data}
-
 
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
@@ -87,13 +86,24 @@ def logCatch(catch: Catch):
 
 
 @app.get("/catches")
-def getCatches():
+def getCatches(user_id: str):
     """
-    Retrieves all catches from the Supabase database, ordered by ID ascending.
+    Returns ONLY the catches that belong to this user_id.
     """
     try:
-        response = supabase.table("catches").select("*").order("id", desc=False).execute()
+        if not user_id:
+            raise HTTPException(status_code=400, detail="Missing user_id")
+
+        response = (
+            supabase.table("catches")
+            .select("*")
+            .eq("user_id", user_id)
+            .order("id", desc=False)
+            .execute()
+        )
+
         return {"data": response.data}
+
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
@@ -101,50 +111,54 @@ def getCatches():
 
 
 @app.delete("/delete-catch/{catchId}")
-def deleteCatch(catchId: int):
+def deleteCatch(catchId: int, user_id: str):
     """
-    Deletes a catch from the database by its ID.
-    Returns success status and message.
+    Deletes a catch only if it belongs to the requesting user_id.
     """
     try:
-        response = supabase.table("catches").delete().eq("id", catchId).execute()
+        if not user_id:
+            raise HTTPException(status_code=400, detail="Missing user_id")
 
+        # Delete only rows that match BOTH id AND user_id
+        response = (
+            supabase.table("catches")
+            .delete()
+            .eq("id", catchId)
+            .eq("user_id", user_id)
+            .execute()
+        )
 
         if not response.data:
-            # No data returned means catch was not found
-            return {"success": False, "message": "Catch not found"}
-
+            return {"success": False, "message": "Catch not found or unauthorized"}
 
         return {"success": True, "message": "Catch deleted successfully"}
 
-
     except Exception as error:
-        # Log detailed traceback to backend console
-        print("ERROR in deleteCatch:", error, file=sys.stderr)
-        traceback.print_exc()
-        # Send a simpler error message to frontend
-        raise HTTPException(status_code=500, detail=f"Delete failed: {str(error)}")
-
+        raise HTTPException(status_code=500, detail=str(error))
 
 
 
 @app.put("/edit-catch/{catchId}")
 async def editCatch(catchId: int, catch: Catch):
     """
-    Updates an existing catch by its ID.
-    Does not allow updating the ID field itself.
+    Updates a catch only if it belongs to the correct user_id.
     """
     try:
+        if not catch.user_id:
+            raise HTTPException(status_code=400, detail="Missing user_id")
+
         response = (
             supabase.table("catches")
-            .update(catch.dict(exclude={"id"}))  # Prevent updating the ID
+            .update(catch.dict(exclude={"id"}))
             .eq("id", catchId)
+            .eq("user_id", catch.user_id)   # security check
             .execute()
         )
 
+        if not response.data:
+            return {"success": False, "message": "Catch not found or unauthorized"}
 
         return {"success": True, "data": response.data}
-
 
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
