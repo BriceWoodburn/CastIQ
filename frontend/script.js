@@ -28,39 +28,37 @@ if (catchForm) {
    * sends it to the backend, and reloads the table.
    */
   catchForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(catchForm);
-    const catchData = Object.fromEntries(formData);
+  const formData = new FormData(catchForm);
+  const catchData = Object.fromEntries(formData);
 
+  if (!catchData.date) catchData.date = new Date().toISOString().slice(0, 10);
+  if (!catchData.time)
+    catchData.time = new Date().toLocaleTimeString("en-GB", { hour12: false });
 
-    // Set default date/time if missing
-    if (!catchData.date) catchData.date = new Date().toISOString().slice(0, 10);
-    if (!catchData.time)
-      catchData.time = new Date().toLocaleTimeString("en-GB", { hour12: false });
+  try {
+    const res = await fetch(`${backendUrl}/log-catch`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...catchData,
+        user_id: USER_ID
+      }),
+    });
 
+    const result = await res.json();
 
-    try {
-      const res = await fetch(`${backendUrl}/log-catch`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({catchData, user_id: USER_ID,}),
-      });
-
-
-      const result = await res.json();
-
-
-      if (result.success) {
-        catchForm.reset();
-        await loadCatches();
-      } else {
-        alert("Error logging catch: " + JSON.stringify(result));
-      }
-    } catch (err) {
-      alert("Network or server error: " + err.message);
+    if (result.success) {
+      catchForm.reset();
+      await loadCatches();
+    } else {
+      alert("Error logging catch: " + JSON.stringify(result));
     }
-  });
+  } catch (err) {
+    alert("Network or server error: " + err.message);
+  }
+});
 
 
   loadCatches();
@@ -372,7 +370,7 @@ if (editForm) {
       const res = await fetch(`${backendUrl}/edit-catch/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({payload, user_id: USER_ID,}),
+        body: JSON.stringify({...payload, user_id: USER_ID,}),
       });
 
       // Always capture raw response text so we see validation details even if not valid JSON
