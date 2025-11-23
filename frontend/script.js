@@ -1,4 +1,5 @@
 const backendUrl = "https://castiq.onrender.com";
+//const backendUrl = "http://127.0.0.1:8000";
 let allCatches = [];
 let filteredCatches = [];
 let currentPage = 1;
@@ -7,6 +8,16 @@ const itemsPerPage = 25;
 
 /* -------------------- Home Page: Catches -------------------- */
 const catchForm = document.getElementById("catchForm");
+
+flatpickr("#datePicker", {
+    dateFormat: "m/d/Y"
+  });
+
+  flatpickr("#timePicker", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K"
+  });
 
 if (catchForm) {
   /**
@@ -18,8 +29,28 @@ if (catchForm) {
     e.preventDefault();
 
     const formData = new FormData(catchForm);
-    const catchData = Object.fromEntries(formData);
+    const catchData = Object.fromEntries(formData.entries());
 
+    const visibleDate = (document.getElementById("datePicker")?.value || "").trim();
+    const visibleTime = (document.getElementById("timePicker")?.value || "").trim();
+
+    if (visibleDate) {
+      const iso = convertDateToISO(visibleDate);
+      if (iso) {
+        catchData.date = iso;
+      } else {
+        catchData.date = "";
+      }
+    }
+
+    if (visibleTime) {
+      const t24 = convertTimeTo24(visibleTime);
+      if (t24) {
+        catchData.time = t24;
+      } else {
+        catchData.time = "";
+      }
+    }
 
     // Set default date/time if missing
     if (!catchData.date) catchData.date = new Date().toISOString().slice(0, 10);
@@ -252,6 +283,35 @@ function escapeHtml(text = "") {
   }[m]));
 }
 
+function convertDateToISO(dateStr) {
+  if (!dateStr) return "";
+  const parts = dateStr.trim().split("/");
+  if (parts.length !== 3) return "";
+  const [month, day, year] = parts.map(p => p.padStart(2, "0"));
+  return `${year}-${month}-${day}`;
+}
+
+function convertTimeTo24(timeStr) {
+  if (!timeStr) return "";
+  timeStr = timeStr.trim();
+  const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*([AaPp][Mm])?$/);
+  if (!match) {
+    const alt = timeStr.split(":");
+    if (alt.length === 2) {
+      return `${alt[0].padStart(2, "0")}:${alt[1].padStart(2, "0")}`;
+    }
+    return "";
+  }
+  let [, hr, min, mod] = match;
+  hr = Number(hr);
+  min = String(min).padStart(2, "0");
+  if (mod) {
+    mod = mod.toUpperCase();
+    if (mod === "PM" && hr !== 12) hr += 12;
+    if (mod === "AM" && hr === 12) hr = 0;
+  }
+  return `${String(hr).padStart(2, "0")}:${min}`;
+}
 
 /* -------------------- Delete Catch -------------------- */
 
@@ -292,6 +352,15 @@ function openEditForm(catchItem) {
   let cleanTime = catchItem.time || "";
   if (cleanTime.includes(":")) cleanTime = cleanTime.split(":").slice(0, 2).join(":");
 
+  flatpickr("#editDate", {
+    dateFormat: "m/d/Y"
+  });
+
+  flatpickr("#editTime", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K"
+  });
 
   document.getElementById("editId").value = catchItem.id;
   document.getElementById("editDate").value = catchItem.date || "";
@@ -325,6 +394,18 @@ if (editForm) {
   editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("editId").value;
+
+  // Read visible input values
+  const visibleDate = (document.getElementById("editDate")?.value || "").trim();
+  const visibleTime = (document.getElementById("editTime")?.value || "").trim();
+
+  // Convert date and time to backend formats
+  let dateForBackend = visibleDate ? convertDate_US_ToISO(visibleDate) : "";
+  let timeForBackend = visibleTime ? convertTimeTo24(visibleTime) : "";
+
+  // Default to now if empty
+  if (!dateForBackend) dateForBackend = new Date().toISOString().slice(0, 10);
+  if (!timeForBackend) timeForBackend = new Date().toLocaleTimeString("en-GB", { hour12: false });
 
     const payload = {
       date: document.getElementById("editDate").value,
