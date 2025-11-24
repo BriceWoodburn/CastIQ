@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi import Response
 from pydantic import BaseModel
 from supabase import create_client, Client
 from datetime import datetime
@@ -162,3 +163,16 @@ async def editCatch(catchId: int, catch: Catch):
 
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
+    
+
+
+@app.get("/keepalive")
+def keepalive():
+    """
+    Endpoint that pings supabase to keep it from going idle
+    """
+    try:
+        resp = supabase.table("catches").select("id").limit(1).execute()
+        return {"ok": True, "supabase_rows": len(resp.data or [])}
+    except Exception as e:
+        return Response(content=f'{{"ok":false,"error":"{str(e)}"}}', media_type="application/json", status_code=200)
