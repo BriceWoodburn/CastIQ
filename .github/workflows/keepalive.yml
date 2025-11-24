@@ -1,8 +1,9 @@
+#GitHub workflow that pings supabase twice a week to keep it from pausingS
 name: Supabase Keepalive
 
 on:
   schedule:
-    - cron: "0 9 * * 1,4"  
+    - cron: "0 9 * * 1,4"
   workflow_dispatch:
 
 jobs:
@@ -11,9 +12,9 @@ jobs:
     steps:
       - name: Send keepalive request
         run: |
-          curl -X GET "$SUPABASE_URL" \
+          curl -X GET "$KEEPALIVE_URL" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY"
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          KEEPALIVE_URL: ${{ secrets.KEEPALIVE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
