@@ -20,6 +20,8 @@ const USER_ID = getUserId();
 
 /* -------------------- Home Page: Catches -------------------- */
 const catchForm = document.getElementById("catchForm");
+const dateInput = document.getElementById("date");
+const timeInput = document.getElementById("time");
 
 if (catchForm) {
   /**
@@ -51,9 +53,11 @@ if (catchForm) {
 
     if (result.success) {
       catchForm.reset();
+      setCurrentDateTime();
       await loadCatches();
+      showToast("Catch logged successfully!", "success");
     } else {
-      alert("Error logging catch: " + JSON.stringify(result));
+      showToast("Failed to log catch.", "error");
     }
   } catch (err) {
     alert("Network or server error: " + err.message);
@@ -64,21 +68,7 @@ if (catchForm) {
   loadCatches();
 }
 
-// Set the date and time fields to the current date and time
-const dateInput = document.getElementById("date");
-const timeInput = document.getElementById("time");
-
-const now = new Date();
-
-const year = now.getFullYear();
-const month = String(now.getMonth() + 1).padStart(2, "0");
-const day = String(now.getDate()).padStart(2, "0");
-dateInput.value = `${year}-${month}-${day}`;
-
-const hours = String(now.getHours()).padStart(2, "0");
-const minutes = String(now.getMinutes()).padStart(2, "0");
-timeInput.value = `${hours}:${minutes}`;
-
+setCurrentDateTime();
 
 /* -------------------- Load & Render Catches -------------------- */
 
@@ -278,6 +268,39 @@ function escapeHtml(text = "") {
   }[m]));
 }
 
+/**
+ * sets the date and time pickers to be the current date and time
+ */
+function setCurrentDateTime() {
+  const now = new Date();
+  dateInput.value = now.toISOString().slice(0, 10);
+  timeInput.value = now.toTimeString().slice(0, 5);
+}
+
+
+
+/* -------------------- alert message -------------------- */
+
+function showToast(message, type = "success", duration = 3000) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  // Trigger animation
+  requestAnimationFrame(() => toast.classList.add("show"));
+
+  // Remove after duration
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => container.removeChild(toast), 300);
+  }, duration);
+}
+
 
 /* -------------------- Delete Catch -------------------- */
 
@@ -293,8 +316,13 @@ async function deleteCatch(id) {
     const result = await res.json();
 
 
-    if (result.success) loadCatches(true);
-    else alert("Error deleting catch: " + (result.message || "Unknown error"));
+    if (result.success){
+      loadCatches(true);
+      showToast("Catch deleted successfully!", "success");
+    }
+    else{
+      showToast("Failed to delete catch.", "error");
+    }
   } catch (err) {
     alert("Network or server error: " + err.message);
   }
@@ -310,8 +338,8 @@ async function deleteCatch(id) {
  */
 
 function openEditForm(catchItem) {
-  const modal = document.getElementById("editModal");
-  modal.setAttribute("aria-hidden", "false");
+   const modal = document.getElementById("editModal");
+  modal.removeAttribute("inert");
   modal.style.display = "flex";
 
 
@@ -339,7 +367,7 @@ function openEditForm(catchItem) {
  */
 function closeEditForm() {
   const modal = document.getElementById("editModal");
-  modal.setAttribute("aria-hidden", "true");
+  modal.setAttribute("inert", "");
   modal.style.display = "none";
 }
 
@@ -373,19 +401,22 @@ if (editForm) {
         body: JSON.stringify({...payload, user_id: USER_ID,}),
       });
 
-      // Always capture raw response text so we see validation details even if not valid JSON
+      // Always capture raw response text to see validation details even if not valid JSON
       const raw = await res.text();
       console.log("PUT response status:", res.status);
       console.log("RESPONSE TEXT:", raw);
 
       if (!res.ok) {
         alert(`Update failed: ${res.status} — check console for details.`);
-      } else {
+        showToast("Failed to update catch.", "error");
+      } 
+      else {
         // success path
         closeEditForm();
         if (typeof loadCatches === "function") { 
-          await loadCatches(true);  // reload allCatches from backend
-          renderTablePage(currentPage); // stay on the current page
+          await loadCatches(true);
+          renderTablePage(currentPage);
+          showToast("Catch updated successfully!", "success");
         }
       }
     } catch (err) {

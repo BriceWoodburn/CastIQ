@@ -27,13 +27,13 @@
       <section class="log-section" aria-labelledby="logCatchTitle">
         <h2 id="logCatchTitle">Log a New Catch</h2>
         <form id="catchForm" class="catch-form" autocomplete="off" aria-label="Log new catch form">
-          <input type="date" id="date" name="date" class="styled-input"  data-placeholder="Date" aria-label="Date of catch"/>
-          <input type="time" id="time" name="time" class="styled-input" data-placeholder="Time" aria-label="Time of catch"/>
+          <input type="date" id="date" name="date" class="styled-input"  data-placeholder="Date"/>
+          <input type="time" id="time" name="time" class="styled-input" data-placeholder="Time"/>
           <input type="text" name="location" placeholder="Location" required aria-label="Location" />
           <input type="text" name="species" placeholder="Species" required aria-label="Species" />
-          <input type="number" step="0.01" name="length_in" placeholder="Length (inches)" required aria-label="Length in inches" />
-          <input type="number" step="0.01" name="weight_lbs" placeholder="Weight (lbs)" required aria-label="Weight in pounds" />
-          <input type="number" step="0.01" name="temperature" placeholder="Water Temp (°F)" required aria-label="Water Temperature in Fahrenheit" />
+          <input type="number" step="0.01" name="length_in" placeholder="Length (inches)" required/>
+          <input type="number" step="0.01" name="weight_lbs" placeholder="Weight (lbs)" required/>
+          <input type="number" step="0.01" name="temperature" placeholder="Water Temp (°F)" required/>
           <input type="text" name="bait" placeholder="Bait" required aria-label="Bait used" />
 
 
@@ -84,7 +84,7 @@
 
 
       <!-- Edit Catch Modal -->
-      <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="editCatchTitle">
+      <div id="editModal" class="modal" role="dialog" aria-modal="true">
         <div class="modal-content">
           <h3 id="editCatchTitle">Edit Catch</h3>
           <form id="editForm" class="edit-form" aria-label="Edit catch form">
@@ -109,6 +109,7 @@
     </main>
   </div>
 
+  <div id="toast-container" class="toast-container"></div>    
 
   <!-- JS -->
   <script src="/static/script.js"></script>

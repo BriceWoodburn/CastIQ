@@ -5,23 +5,25 @@ let chartInstance = null;
 
 /* -------------------- Data Fetching -------------------- */
 
+function getUserId() {
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = crypto.randomUUID();
+    localStorage.setItem("userId", userId);
+  }
+  return userId;
+}
+const USER_ID = getUserId();
+
 /**
  * Fetches all catches from the backend API.
  *
  * @returns {Promise<Array>} Array of catch objects, or empty array on error.
  */
 async function fetchCatches() {
-  try {
-    const userId = localStorage.getItem("user_id");
-
-    if (!userId) {
-      console.error("No user_id found in localStorage");
-      return [];
-    }
-
-    const res = await fetch(`${backendUrl}/catches?user_id=${userId}`);
+   try {
+    const res = await fetch(`${backendUrl}/catches?user_id=${USER_ID}`);
     const json = await res.json();
-
     return json.data || [];
   } catch (err) {
     console.error("Error fetching catches:", err);
