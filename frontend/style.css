@@ -639,8 +639,39 @@ input[type="time"] {
   transform: translateY(0);
 }
 
-.toast.success { background: linear-gradient(180deg, #12a18a, #0f8b78); }
-.toast.error { background: linear-gradient(180deg, #c94f4f, #b53f3f); }
+.toast.success { 
+  background: linear-gradient(180deg, #12a18a, #0f8b78); 
+}
+
+.toast.error { 
+  background: linear-gradient(180deg, #c94f4f, #b53f3f); 
+}
+
+.table-wrap { 
+  position: relative; 
+  min-height: 50px; 
+}
+
+.chart-wrapper {
+  position: relative;
+  min-height: 50px;
+}
+
+.empty-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0b6b63;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {

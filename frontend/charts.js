@@ -1,5 +1,5 @@
-const backendUrl = "https://castiq.onrender.com";
-//const backendUrl = "http://127.0.0.1:8000";
+//const backendUrl = "https://castiq.onrender.com";
+const backendUrl = "http://127.0.0.1:8000";
 let chartInstance = null;
 
 
@@ -50,6 +50,20 @@ async function fetchCatches() {
 async function renderChart(chartType) {
   const data = await fetchCatches();
 
+  // Handle empty data message
+  const emptyEl = document.getElementById("chartEmptyMessage");
+  const canvas = document.getElementById("chartCanvas");
+
+  if (!data.length) {
+    emptyEl.style.display = "flex";
+    canvas.style.display = "none";
+    if (chartInstance) chartInstance.destroy();
+    return;
+  } 
+  else {
+    emptyEl.style.display = "none";
+    canvas.style.display = "block";
+  }
 
   if (!data.length) {
     if (chartInstance) {
@@ -59,7 +73,6 @@ async function renderChart(chartType) {
     return;
   }
 
-  const canvas = document.getElementById("chartCanvas");
   const wrapper = canvas.parentElement;
 
   const containerWidth = wrapper.clientWidth;
