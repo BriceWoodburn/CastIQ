@@ -6,6 +6,10 @@
   <title>CastIQ - Charts</title>
   <link rel="stylesheet" href="/static/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/static/favicon/site.webmanifest">
 </head>
 <body>
   <div class="page-wrap">
@@ -54,6 +58,9 @@
       <section class="chart-wrapper">
         <div class="chart-inner">
           <canvas id="chartCanvas"></canvas>
+        </div>
+        <div id="chartEmptyMessage" class="empty-message" style="display: none;">
+          Log a catch to see data here!
         </div>
       </section>
     </main>

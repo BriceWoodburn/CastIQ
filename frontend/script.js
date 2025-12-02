@@ -1,5 +1,5 @@
-const backendUrl = "https://castiq.onrender.com";
-//const backendUrl = "http://127.0.0.1:8000";
+//const backendUrl = "https://castiq.onrender.com";
+const backendUrl = "http://127.0.0.1:8000";
 let allCatches = [];
 let filteredCatches = [];
 let currentPage = 1;
@@ -105,6 +105,19 @@ async function loadCatches(keepPage = false) {
 
     const pageToShow = keepPage ? currentPage : 1;
     renderTablePage(pageToShow);
+
+    // Switch tables based on if the user has any data 
+      const emptyEl = document.getElementById("emptyMessage");
+      const tableEl = document.getElementById("catchesTable");
+
+      if (!allCatches || allCatches.length === 0) {
+        emptyEl.style.display = "flex";
+        tableEl.style.display = "none";
+      } 
+      else {
+        emptyEl.style.display = "none";
+        tableEl.style.display = "";
+      }
   } catch (err) {
     console.error("Failed to load catches:", err);
   }
@@ -216,9 +229,18 @@ function renderTablePage(page) {
  */
 function updatePaginationControls() {
   const totalPages = Math.ceil(filteredCatches.length / itemsPerPage);
-  document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
-  document.getElementById("prevPage").disabled = currentPage === 1;
-  document.getElementById("nextPage").disabled = currentPage === totalPages;
+
+  // If there is no data, show Page 0 of 0 and disable buttons
+  if (filteredCatches.length === 0) {
+    document.getElementById("pageInfo").textContent = "Page 0 of 0";
+    document.getElementById("prevPage").disabled = true;
+    document.getElementById("nextPage").disabled = true;
+  } 
+  else {
+    document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById("prevPage").disabled = currentPage === 1;
+    document.getElementById("nextPage").disabled = currentPage === totalPages;
+  }
 }
 
 
