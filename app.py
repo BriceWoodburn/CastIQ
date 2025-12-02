@@ -16,9 +16,6 @@ import sys
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
 
-key = "sb_publishable_5aDVvk_AiunqB6F01VAKdA_JqpnaKtt"
-url = "https://fczfpqfwcxfhyakgggbf.supabase.co"
-
 supabase: Client = create_client(url, key)
 
 
