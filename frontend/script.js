@@ -249,7 +249,8 @@ function updatePaginationControls() {
  */
 function scrollToTableTop() {
   const tableSection = document.querySelector(".catches-wrap");
-  if (tableSection) tableSection.scrollIntoView({ behavior: "smooth" });
+  const y = tableSection.getBoundingClientRect().top + window.pageYOffset;
+  window.scrollTo({ top: y });
 }
 
 
