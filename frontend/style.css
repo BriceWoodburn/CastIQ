@@ -116,7 +116,7 @@ input:focus{
 .catch-form input[type="number"] {
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid #dce7e6;
+  border: 2px solid #D3D3D3;
   font-size: 0.95rem;
   color: #0f2d2a;
 }
@@ -297,7 +297,7 @@ input:focus{
 .modal-content label {
   display: block;
   font-size: 0.9rem;
-  color: #243b39;
+  color: black;
   margin-bottom: 8px;
 }
 
@@ -309,6 +309,15 @@ input:focus{
   margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #e6efee;
+}
+
+.edit-form label{
+  font-size: 1rem;
+  color: black;
+}
+
+.edit-form input{
+  border: 2px solid #D3D3D3;
 }
 
 
@@ -388,8 +397,9 @@ input:focus{
   flex-wrap: wrap;
 }
 
-/* Buttons themselves: grow and shrink equally */
+/* Buttons themselves */
 .chart-buttons button {
+  position: relative; /* for the underline */
   flex: 1 1 0;
   min-width: 100px;
   padding: 10px 0;
@@ -397,22 +407,44 @@ input:focus{
   border: none;
   font-weight: 600;
   cursor: pointer;
-  background: #70a7a3;
+  background: linear-gradient(180deg, #0f8b78, #08715f);
   color: white;
   box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
+/* Hover effect */
 .chart-buttons button:hover {
   box-shadow: 0 6px 12px rgba(0,0,0,0.1);
   background: linear-gradient(180deg, #0f8b78, #08715f);
   transform: translateY(-2px);
 }
 
+/* Active button */
 .chart-buttons button.active {
-  background: linear-gradient(180deg, #0f8b78, #08715f);
-  color: white;
-  transform: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Animated underline under text */
+.chart-buttons button::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: white;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.chart-buttons button.active::after {
+  transform: scaleX(1);
+  transform-origin: center;
+}
+
 
 /* Styled dropdown */
 .select-wrapper {
@@ -503,12 +535,11 @@ input:focus{
 
 .table-header input {
   padding: 10px 16px;
-  border: 1px solid #dce7e6;
+  border: 2px solid #D3D3D3;
   border-radius: 12px;
   font-size: 0.95rem;
   background: #ffffff;
   color: #21323a;
-
   width: 260px;
   max-width: 100%;
   flex-shrink: 1;

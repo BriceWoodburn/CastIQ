@@ -34,8 +34,8 @@
           <input type="time" id="time" name="time" class="styled-input" data-placeholder="Time"/>
           <input type="text" name="location" placeholder="Location" required aria-label="Location" />
           <input type="text" name="species" placeholder="Species" required aria-label="Species" />
-          <input type="number" step="0.01" name="length_in" placeholder="Length (inches)" required/>
-          <input type="number" step="0.01" name="weight_lbs" placeholder="Weight (lbs)" required/>
+          <input type="number" step="0.01" name="length_in" placeholder="Length (inches)" required min="0"/>
+          <input type="number" step="0.01" name="weight_lbs" placeholder="Weight (lbs)" required min="0"/>
           <input type="number" step="0.01" name="temperature" placeholder="Water Temp (°F)" required/>
           <input type="text" name="bait" placeholder="Bait" required aria-label="Bait used" />
 
@@ -99,8 +99,8 @@
             <label>Time:<input type="time" id="editTime" required/></label>
             <label>Location:<input type="text" id="editLocation" required/></label>
             <label>Species:<input type="text" id="editSpecies" required/></label>
-            <label>Length (in):<input type="number" step="0.01" id="editLength" required/></label>
-            <label>Weight (lbs):<input type="number" step="0.01" id="editWeight" required/></label>
+            <label>Length (in):<input type="number" step="0.01" id="editLength" required min="0"/></label>
+            <label>Weight (lbs):<input type="number" step="0.01" id="editWeight" required min="0"/></label>
             <label>Water Temp (°F):<input type="number" id="editTemperature" required/></label>
             <label>Bait:<input type="text" id="editBait" required/></label>
 

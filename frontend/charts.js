@@ -96,7 +96,7 @@ async function renderChart(chartType) {
       });
 
 
-      chartInstance = new Chart(ctx, {
+       chartInstance = new Chart(ctx, {
         type: "bar",
         data: {
           labels: Object.keys(speciesCounts),
@@ -113,11 +113,38 @@ async function renderChart(chartType) {
         options: {
           responsive: false,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } },
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  size: 16,
+                },
+                color: '#000000'
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: true, text: "Species", font: { size: 16 }, color: '#000000'},
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: { color: '#777777' }
+            },
+            y: {
+              title: { display: true, text: "Fish Caught", font: { size: 16 }, color: '#000000'},
+              beginAtZero: true,
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: { color: '#777777' }
+            }
+          }
         },
       });
-      break;
     }
 
 
@@ -146,15 +173,45 @@ async function renderChart(chartType) {
               fill: false,
               tension: 0.25,
               pointBackgroundColor: "rgba(75,192,192,1)",
+              backgroundColor: "rgba(75,192,192,1)"
             },
           ],
         },
         options: {
           responsive: false,
           maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  size: 16,
+                },
+                color: '#000000',
+                usePointStyle: false, 
+                boxWidth: 20,
+                boxHeight: 20
+              }
+            }
+          },
           scales: {
-            x: { title: { display: true, text: "Date" } },
-            y: { beginAtZero: true, title: { display: true, text: "Catches" } },
+            x: {
+              title: { display: true, text: "Date", font: { size: 16 }, color: '#000000'},
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: { color: '#777777' }
+            },
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Catches", font: { size: 16 }, color: '#000000'},
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: { color: '#777777' }
+            }
           },
         },
       });
@@ -191,7 +248,44 @@ async function renderChart(chartType) {
             },
           ],
         },
-        options: { responsive: false, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  size: 16,
+                },
+                color: '#000000'
+              }
+            }
+          },
+          scales: {
+            y: {
+              title: { display: true, text: "Weight (lbs)", font: { size: 16 }, color: '#000000'},
+              beginAtZero: true,
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: {
+                color: '#777777'
+              }
+            },
+            x: {
+              title: { display: true, text: "Species", font: { size: 16 }, color: '#000000'},
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: {
+                color: '#777777'
+              }
+            }
+          },
+        },
       });
       break;
     }
@@ -223,7 +317,35 @@ async function renderChart(chartType) {
             },
           ],
         },
-        options: { responsive: false, maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: "Catches by Bait",
+              font: {
+                size: 16,
+                weight: "none",
+              },
+              color: "#000000",
+              padding: {
+                top: 10,
+                bottom: 20
+              }
+            },
+            legend: {
+              display: true,
+              position: "bottom",
+              labels: {
+                font: {
+                  size: 16,
+                },
+                color: '#000000'
+              }
+            },
+          }
+        },
       });
       break;
     }
@@ -257,8 +379,40 @@ async function renderChart(chartType) {
         options: {
           responsive: false,
           maintainAspectRatio: false,
-          indexAxis: "y",
-          scales: { x: { beginAtZero: true } },
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  size: 16,
+                },
+                color: '#000000'
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: true, text: "Species", font: { size: 16 }, color: '#000000'},
+              beginAtZero: true,
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: {
+                color: '#777777'
+              }
+            },
+            y: {
+              title: { display: true, text: "Length (in)", font: { size: 16 }, color: '#000000'},
+              ticks: {
+                font: { size: 16 },
+                color: '#000000'
+              },
+              grid: {
+                color: '#777777'
+              }
+            }
+          }
         },
       });
       break;
