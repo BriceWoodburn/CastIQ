@@ -296,7 +296,7 @@ function escapeHtml(text = "") {
  */
 function setCurrentDateTime() {
   const now = new Date();
-  dateInput.value = now.toISOString().slice(0, 10);
+  dateInput.value = now.toLocaleDateString('en-CA');
   timeInput.value = now.toTimeString().slice(0, 5);
 }
 
