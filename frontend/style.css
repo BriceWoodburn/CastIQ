@@ -5,21 +5,13 @@
   padding: 0;
   
 }
-
-input,
-textarea,
-select {
-  font-size: 16px;
-}
-
 html, body {
   font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
   background: #e8f5f3;
   color: #21323a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: auto;
+  overscroll-behavior-y: contain;
   overflow-x: hidden;
   max-width: 100%;
 }
