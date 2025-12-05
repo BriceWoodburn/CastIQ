@@ -291,7 +291,7 @@ input:focus{
   padding: 22px;
   box-shadow: 0 12px 28px rgba(3, 20, 20, 0.18);
   flex: 0 0 auto;
-  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
   overflow-y: auto;
 }
 
@@ -503,8 +503,7 @@ input:focus{
   background: #ffffff;
   border: 1px solid #d0d7de;
   border-radius: 16px;
-  padding: 16px;
-  overflow: hidden;  
+  padding: 16px;  
 }
 
 #chartCanvas {
