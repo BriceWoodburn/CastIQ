@@ -3,7 +3,15 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  
 }
+
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
 html, body {
   font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
   background: #e8f5f3;
