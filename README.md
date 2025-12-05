@@ -1,5 +1,5 @@
 # CastIQ
-A full-stack fishing analytics and tracking web application designed to log, analyze, and visualize fishing data.
+A full-stack fishing tracker web application used to log, analyze, and visualize fishing data.
 
 ## Overview
 CastIQ allows users to record, view, and analyze their fishing catches through organized tables and data visualizations. The goal is to help anglers uncover patterns such as bait performance, species frequency, and seasonal trends that they wouldnt otherwise have noticed. CastIQ offers a clean, user-friendly, and fully responsive interface.
