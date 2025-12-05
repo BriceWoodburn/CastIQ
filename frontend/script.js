@@ -360,26 +360,24 @@ async function deleteCatch(id) {
  */
 
 function openEditForm(catchItem) {
-   const modal = document.getElementById("editModal");
+  const modal = document.getElementById("editModal");
+
+  document.body.classList.add("modal-open");
+
   modal.removeAttribute("inert");
   modal.style.display = "flex";
 
-
   let cleanTime = catchItem.time || "";
   if (cleanTime.includes(":")) cleanTime = cleanTime.split(":").slice(0, 2).join(":");
-
 
   document.getElementById("editId").value = catchItem.id;
   document.getElementById("editDate").value = catchItem.date || "";
   document.getElementById("editTime").value = cleanTime;
   document.getElementById("editLocation").value = catchItem.location || "";
   document.getElementById("editSpecies").value = catchItem.species || "";
-  document.getElementById("editLength").value =
-  catchItem.length_in != null ? catchItem.length_in : "";
-  document.getElementById("editWeight").value =
-  catchItem.weight_lbs != null ? catchItem.weight_lbs : "";
-  document.getElementById("editTemperature").value =
-  catchItem.temperature != null ? catchItem.temperature : "";
+  document.getElementById("editLength").value = catchItem.length_in ?? "";
+  document.getElementById("editWeight").value = catchItem.weight_lbs ?? "";
+  document.getElementById("editTemperature").value = catchItem.temperature ?? "";
   document.getElementById("editBait").value = catchItem.bait || "";
 }
 
@@ -389,6 +387,9 @@ function openEditForm(catchItem) {
  */
 function closeEditForm() {
   const modal = document.getElementById("editModal");
+
+  document.body.classList.remove("modal-open");
+
   modal.setAttribute("inert", "");
   modal.style.display = "none";
 }

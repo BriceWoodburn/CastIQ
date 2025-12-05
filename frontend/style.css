@@ -302,7 +302,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   display: none;
   align-items: flex-start;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
   padding: 24px 12px;
 }
 
@@ -356,6 +356,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .edit-form input{
   border: 2px solid #D3D3D3;
+}
+
+body.modal-open {
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  touch-action: none;
 }
 
 
