@@ -128,8 +128,6 @@ input:focus{
   color: #0f2d2a;
 }
 
-
-/* Form submit button */
 .form-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -137,6 +135,35 @@ input:focus{
   margin-top: 4px;
 }
 
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="time"]::-webkit-datetime-edit {
+  padding: 0;
+  margin: 0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  padding: 0;
+  margin: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.catch-form input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
 
 .primary-btn {
   background: linear-gradient(180deg, #0f8b78, #08715f);
@@ -156,8 +183,8 @@ input:focus{
 }
 
 #catchForm button[type="submit"] {
-  font-size: 15px;  /* increase the number to make it bigger */
-  font-weight: bold; /* optional: make it bold */
+  font-size: 15px;
+  font-weight: bold;
 }
 
 
