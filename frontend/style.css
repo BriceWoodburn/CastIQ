@@ -11,9 +11,10 @@ html, body {
   color: #21323a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
   overflow-x: hidden;
   max-width: 100%;
+  -webkit-overflow-scrolling: auto;
 }
 
 
@@ -182,8 +183,10 @@ input:focus{
   padding: 12px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(8, 43, 40, 0.04);
-  -webkit-overflow-scrolling: touch;
-  -webkit-transform: translateZ(0);
+}
+
+.catches-wrap {
+  overscroll-behavior-y: contain;
 }
 
 
