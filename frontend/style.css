@@ -10,6 +10,8 @@ html, body {
   color: #21323a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 
@@ -176,6 +178,8 @@ input:focus{
   padding: 12px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(8, 43, 40, 0.04);
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0);
 }
 
 
@@ -200,8 +204,8 @@ input:focus{
   background: #0b6b63;
   color: white;
   font-weight: 700;
-  /*position: sticky
-  top: 0;*/
+  position: sticky;
+  top: 0;
 }
 
 
