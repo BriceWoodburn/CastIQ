@@ -200,8 +200,8 @@ input:focus{
   background: #0b6b63;
   color: white;
   font-weight: 700;
-  position: sticky;
-  top: 0;
+  /*position: sticky
+  top: 0;*/
 }
 
 
